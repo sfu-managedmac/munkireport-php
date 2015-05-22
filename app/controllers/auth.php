@@ -2,7 +2,7 @@
 class auth extends Controller
 {
 	// Authentication mechanisms we handle
-	public $mechanisms = array('noauth', 'config', 'ldap', 'AD');
+	public $mechanisms = array('noauth', 'sfu', 'config', 'ldap', 'AD');
 
 	// Authentication mechanisms available
 	public $auth_mechanisms = array();
@@ -61,6 +61,11 @@ class auth extends Controller
 				case 'noauth': // No authentication
 					$check = TRUE;
 					$login = 'noauth';
+					break 2;
+
+				case 'sfu': // SFU CAS authentication
+					$check = CAS\CAS::requireLogin();
+					$login = $_SESSION['cas_username'];
 					break 2;
 
 				case 'config': // Config authentication
